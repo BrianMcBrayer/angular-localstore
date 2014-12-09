@@ -40,11 +40,14 @@ function ($window) {
         if (rawItem) {
             var parsedItem = JSON.parse(rawItem);
 
-            if (LSItemWrapper.isLSItemWrapper(parsedItem) &&
-                parsedItem.isValid()) {
-                return parsedItem.value;
+            if (LSItemWrapper.isLSItemWrapper(parsedItem)) {
+                var parsedLSItem = new LSItemWrapper(parsedItem.value, parsedItem.expiresOn);
+                if (parsedLSItem.isValid()) {
+                    return parsedItem.value;
+                }
+            } else {
+                return parsedItem;
             }
-            
         }
 
         return null;
@@ -75,16 +78,20 @@ function ($window) {
         }
 
         function isValid() {
-            if (typeof(me.expiresOn) === 'string') {
-                var parsedExpiration = Date.parse(me.expiresOn);
+            var parsedExpiration = Date.parse(me.expiresOn);
 
-                if (parsedExpiration) {
-                    me.expiresOn = parsedExpiration;
-                    return parsedExpiration >= new Date();
-                }
+            if (typeof (me.expiresOn) === 'string') {
+                parsedExpiration = Date.parse(me.expiresOn);
+            } else if (me.expiresOn instanceof Date) {
+                parsedExpiration = me.expiresOn;
             }
 
-            return false;
+            if (parsedExpiration) {
+                me.expiresOn = parsedExpiration;
+                return parsedExpiration >= new Date();
+            }
+
+            return true;
         }
     }
 
