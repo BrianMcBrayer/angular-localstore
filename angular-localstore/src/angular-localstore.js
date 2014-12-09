@@ -12,15 +12,19 @@ function ($window) {
     'use strict';
 
     var ls = $window.localStorage;
-    var lsEx = {
+    var service = {
         setItem: setItem,
-        getItem: getItem
-    };
-    var service = angular.extend({}, ls, lsEx);
+        getItem: getItem,
+        clear: clear
+    };    
 
     ////////////
     // Functions
     ////////////
+
+    function clear() {
+        ls.clear();
+    }
 
     function setItem(key, value, expiresOn) {
         var expiryDate = (expiresOn != null ? new Date(expiresOn) : null);
