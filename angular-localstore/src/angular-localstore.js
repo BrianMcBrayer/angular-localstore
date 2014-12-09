@@ -5,7 +5,7 @@
  * description: Wraps localStorage to fill implementation problems and provide a mockable interface
  */
 
-angular.module('heroicVenture.localStore', [])
+angular.module('heroicVentures.localStore', [])
 .factory('$localStorage',
         ['$window',
 function ($window) {
