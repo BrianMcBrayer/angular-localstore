@@ -23,7 +23,8 @@ function ($window) {
     ////////////
 
     function setItem(key, value, expiresOn) {
-        var wrappedItem = new LSItemWrapper(value, expiresOn);
+        var expiryDate = (expiresOn != null ? new Date(expiresOn) : null);
+        var wrappedItem = new LSItemWrapper(value, expiryDate);
 
         if (wrappedItem.isValid()) {
             ls.setItem(key, wrappedItem.toStorageObject());
@@ -44,6 +45,8 @@ function ($window) {
                 var parsedLSItem = new LSItemWrapper(parsedItem.value, parsedItem.expiresOn);
                 if (parsedLSItem.isValid()) {
                     return parsedItem.value;
+                } else {
+                    service.removeItem(key);
                 }
             } else {
                 return parsedItem;
@@ -71,24 +74,15 @@ function ($window) {
         function handleExpiresOn() {
             // Return a null object if it's already past expiration
             if (expiresOn instanceof Date) {
-                if (expiresOn >= new Date) {
-                    me.expiresOn = expiresOn.toISOString();
-                }
+                me.expiresOn = expiresOn.toISOString();
             }
         }
 
         function isValid() {
-            var parsedExpiration = Date.parse(me.expiresOn);
+            var parsedExpiresOn = Date.parse(me.expiresOn);
 
-            if (typeof (me.expiresOn) === 'string') {
-                parsedExpiration = Date.parse(me.expiresOn);
-            } else if (me.expiresOn instanceof Date) {
-                parsedExpiration = me.expiresOn;
-            }
-
-            if (parsedExpiration) {
-                me.expiresOn = parsedExpiration;
-                return parsedExpiration >= new Date();
+            if (parsedExpiresOn) {
+                return parsedExpiresOn >= new Date();
             }
 
             return true;
