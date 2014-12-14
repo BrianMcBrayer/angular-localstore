@@ -5,6 +5,15 @@
  * description: Wraps localStorage to fill implementation problems and provide a mockable interface
  */
 
+/*
+ * TODO
+ * [] Switch to make API pluggable:
+ * -[] Common API centered around localStorage API
+ * --[] Done by taking an object that implements current service
+ * -[] Change to provider, pass in objects in order of desired use
+ * -[] Fallback to each service if it cannot be used
+ */
+
 angular.module('heroicVentures.localStore', [])
 .factory('$localStorage',
         ['$window',
@@ -19,7 +28,8 @@ function ($window) {
         clear: clear,
         removeItem: removeItem,
         key: key,
-        length: length
+        length: length,
+        canUse: browserHasNative
     };
 
     ////////////
