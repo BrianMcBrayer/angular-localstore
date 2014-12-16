@@ -12,16 +12,16 @@
   <body ng-controller="MasterController as vm">
     <div>
       <label for="storeKey">Key: </label>
-      <input type="text" id="storeKey" name="storeKey" placeholder="key" />
+      <input type="text" id="storeKey" name="storeKey" placeholder="key" ng-model="vm.storeKey" />
       <label for="storeValue">Value: </label>
-      <input type="text" id="storeValue" name="storeValue" placeholder="value" />
-      <button>Store</button>
-      <button>Clear All Storage</button>
+      <input type="text" id="storeValue" name="storeValue" placeholder="value" ng-model="vm.storeValue" />
+      <button ng-click="vm.store()">Store</button>
+      <button ng-click="vm.clearAllStorage()">Clear All Storage</button>
     </div>
     <div>
       <label for="retrieveKey">Retrieve key: </label>
-      <input type="text" id="retrieveKey" name="retrieveKey" placeholder="key" />
-      <button>Retrieve</button>
+      <input type="text" id="retrieveKey" name="retrieveKey" placeholder="key" ng-model="vm.retrieveKey" />
+      <button ng-click="vm.retrieve()">Retrieve</button>
     </div>
   </body>
 </html>
