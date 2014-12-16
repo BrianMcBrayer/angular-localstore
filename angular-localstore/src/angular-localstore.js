@@ -21,7 +21,15 @@ function () {
     'use strict';
     var me = this;
 
-    
+    //////////
+    // Members
+    //////////
+
+    var storageServicePriority = [];
+
+    function setStorageServicesByPriority () {
+      
+    }
 
     me.$get = ['$window', function($window) {
       var ls;
