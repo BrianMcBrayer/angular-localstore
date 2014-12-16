@@ -10,10 +10,18 @@
     <script src="angular-localstore/app/app.js"></script>
   </head>
   <body ng-controller="MasterController as vm">
+    <div>
       <label for="storeKey">Key: </label>
-      <input id="storeKey" name="storeKey" placeholder="key" />
+      <input type="text" id="storeKey" name="storeKey" placeholder="key" />
       <label for="storeValue">Value: </label>
-      <input id="storeValue" name="storeValue" placeholder="value" />
+      <input type="text" id="storeValue" name="storeValue" placeholder="value" />
       <button>Store</button>
+      <button>Clear All Storage</button>
+    </div>
+    <div>
+      <label for="retrieveKey">Retrieve key: </label>
+      <input type="text" id="retrieveKey" name="retrieveKey" placeholder="key" />
+      <button>Retrieve</button>
+    </div>
   </body>
 </html>
