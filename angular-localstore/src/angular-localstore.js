@@ -21,7 +21,7 @@ function () {
     'use strict';
     var me = this;
 
-
+    
 
     me.$get = ['$window', function($window) {
       var ls;
