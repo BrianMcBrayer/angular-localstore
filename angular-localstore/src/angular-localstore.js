@@ -23,7 +23,7 @@ function () {
 
     me.setStorageServicesByPriority = setStorageServicesByPriority;
     me.findHighestUsefulStorageService = findHighestUsefulStorageService;
-
+    
     //////////
     // Members
     //////////
