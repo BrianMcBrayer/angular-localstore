@@ -21,14 +21,42 @@ function () {
     'use strict';
     var me = this;
 
+    me.setStorageServicesByPriority = setStorageServicesByPriority;
+    me.findHighestUsefulStorageService = findHighestUsefulStorageService;
+
     //////////
     // Members
     //////////
 
-    var storageServicePriority = [];
+    var storageServicePriority = [],
+        useStorageService;
 
     function setStorageServicesByPriority () {
-      
+      storageServicePriority = [];
+
+      // Convert the passed arguments to an array
+      if (arguments.length > 0) {
+        for (var curArgIndex = 0, len = arguments.length; curArgIndex < len; i++) {
+          storageServicePriority.push(arguments[curArgIndex]);
+        }
+      }
+
+      return storageServicePriority;
+    }
+
+    function findHighestUsefulStorageService() {
+      useStorageService = null;
+
+      for (var curArgIndex = 0, len = storageServicePriority.length; curArgIndex < len; i++) {
+        var curService = storageServicePriority[curArgIndex];
+
+        if (curService && typeof(curService.canUse) === 'function' && curService.canUse()) {
+          useStorageService = curService;
+          break;
+        }
+      }
+
+      return useStorageService;
     }
 
     me.$get = ['$window', function($window) {
