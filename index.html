@@ -2,12 +2,14 @@
   <head>
     <title>This is a test page!</title>
 
-    <script src="scripts/angular.min.js" />
-    <script src="src/angular-localstore.js" />
+    <script src="scripts/angular.min.js"></script>
+    <script src="src/angular-localstore.js"></script>
 
-    <script src="app/app.js" />
+    <script src="app/app.js"></script>
   </head>
   <body ng-app="app" ng-controller="MasterController as vm">
       {{1 + 1}}
+
+      {{vm.test}}
   </body>
 </html>
