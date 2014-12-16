@@ -22,6 +22,9 @@
       <label for="retrieveKey">Retrieve key: </label>
       <input type="text" id="retrieveKey" name="retrieveKey" placeholder="key" ng-model="vm.retrieveKey" />
       <button ng-click="vm.retrieve()">Retrieve</button>
+      <div>
+        Retrieved value: {{vm.retrievedItem}}
+      </div>
     </div>
   </body>
 </html>
