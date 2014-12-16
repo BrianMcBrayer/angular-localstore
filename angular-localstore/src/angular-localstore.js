@@ -16,12 +16,14 @@
 
 angular.module('heroicVentures.localStore', [])
 .provider('$localStorage',
-        ['$window',
-function ($window) {
+        [
+function () {
     'use strict';
     var me = this;
 
-    me.$get = [function() {
+
+
+    me.$get = ['$window', function($window) {
       var ls;
 
       var service = {
