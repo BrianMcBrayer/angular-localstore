@@ -10,8 +10,10 @@
     <script src="angular-localstore/app/app.js"></script>
   </head>
   <body ng-controller="MasterController as vm">
-      {{1 + 1}}
-
-      {{vm.test}}
+      <label for="storeKey">Key: </label>
+      <input id="storeKey" name="storeKey" placeholder="key" />
+      <label for="storeValue">Value: </label>
+      <input id="storeValue" name="storeValue" placeholder="value" />
+      <button>Store</button>
   </body>
 </html>
