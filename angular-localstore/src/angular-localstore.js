@@ -52,6 +52,8 @@ angular.module('heroicVentures.localStore', [])
         availableService: availableService
       };
 
+      init();
+
       function init() {
         findHighestUsefulStorageService(
           populatePotentialStorageServices(storageServicePriority));
