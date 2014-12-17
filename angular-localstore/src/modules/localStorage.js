@@ -1,148 +1,149 @@
 angular.module('heroicVentures.localStore')
-.service('hVLocalStorage', [
-function() {
+.factory('hVLocalStorage', ['$window', function($window) {
+
+  var ls;
 
   var service = {
-    setItem: setItem,
-    getItem: getItem,
-    clear: clear,
-    removeItem: removeItem,
-    key: key,
-    length: length,
-    canUse: browserHasNative
-  };
+      setItem: setItem,
+      getItem: getItem,
+      clear: clear,
+      removeItem: removeItem,
+      key: key,
+      length: length,
+      canUse: browserHasNative
+    };
 
-  ////////////
-  // Init
-  ////////////
-  init();
+    ////////////
+    // Init
+    ////////////
+    init();
 
-  ////////////
-  // Functions
-  ////////////
+    ////////////
+    // Functions
+    ////////////
 
-  function init() {
-    if (browserHasNative()) {
-      ls = $window.localStorage;
-    } else {
-      // Create fallback here
-    }
-  }
+    init();
 
-  function browserHasNative() {
-    var hasNative,
-    FAKE_ITEM_KEY = 'hv.fakeKey.asdfghjlkasdfghjlasdfghjkasdfghjklasdfghjklweqryuiozxcvnm',
-    FAKE_ITEM_VALUE = 'hv.fakeValue';
-
-    try {
-
-      // General browser test
-      hasNative = ('localStorage' in $window);
-
-      // Can we touch the object? (Fails in Chrome when localStorage is blocked)
-      var ls = $window.localStorage;
-      hasNative = hasNative && (ls != null);
-
-      // Can we store something?
-      ls.setItem(FAKE_ITEM_KEY, FAKE_ITEM_VALUE);
-      hasNative = ls.getItem(FAKE_ITEM_KEY) != null;
-
-      // Clear the fake key
-      ls.removeItem(FAKE_ITEM_KEY);
-    } catch (e) {
-      hasNative = false;
+    function init() {
+      if (browserHasNative()) {
+        ls = $window.localStorage;
+      }
     }
 
-    return hasNative;
-  }
+    function browserHasNative() {
+      var hasNative,
+      FAKE_ITEM_KEY = 'hv.fakeKey.asdfghjlkasdfghjlasdfghjkasdfghjklasdfghjklweqryuiozxcvnm',
+      FAKE_ITEM_VALUE = 'hv.fakeValue';
 
-  function length() {
-    return ls.length;
-  }
+      try {
 
-  function key(index) {
-    return ls.key(index);
-  }
+        // General browser test
+        hasNative = ('localStorage' in $window);
 
-  function removeItem(key) {
-    return ls.removeItem(key);
-  }
+        // Can we touch the object? (Fails in Chrome when localStorage is blocked)
+        var ls = $window.localStorage;
+        hasNative = hasNative && (ls != null);
 
-  function clear() {
-    ls.clear();
-  }
+        // Can we store something?
+        ls.setItem(FAKE_ITEM_KEY, FAKE_ITEM_VALUE);
+        hasNative = ls.getItem(FAKE_ITEM_KEY) != null;
 
-  function setItem(key, value, expiresOn) {
-    var expiryDate = (expiresOn != null ? new Date(expiresOn) : null);
-    var wrappedItem = new LSItemWrapper(value, expiryDate);
+        // Clear the fake key
+        ls.removeItem(FAKE_ITEM_KEY);
+      } catch (e) {
+        hasNative = false;
+      }
 
-    if (wrappedItem.isValid()) {
-      ls.setItem(key, wrappedItem.toStorageObject());
-
-      return value;
+      return hasNative;
     }
 
-    return null;
-  }
+    function length() {
+      return ls.length;
+    }
 
-  function getItem(key) {
-    var rawItem = ls.getItem(key);
+    function key(index) {
+      return ls.key(index);
+    }
 
-    if (rawItem) {
-      var parsedItem = JSON.parse(rawItem);
+    function removeItem(key) {
+      return ls.removeItem(key);
+    }
 
-      if (LSItemWrapper.isLSItemWrapper(parsedItem)) {
-        var parsedLSItem = new LSItemWrapper(parsedItem.value, parsedItem.expiresOn);
-        if (parsedLSItem.isValid()) {
-          return parsedItem.value;
+    function clear() {
+      ls.clear();
+    }
+
+    function setItem(key, value, expiresOn) {
+      var expiryDate = (expiresOn != null ? new Date(expiresOn) : null);
+      var wrappedItem = new LSItemWrapper(value, expiryDate);
+
+      if (wrappedItem.isValid()) {
+        ls.setItem(key, wrappedItem.toStorageObject());
+
+        return value;
+      }
+
+      return null;
+    }
+
+    function getItem(key) {
+      var rawItem = ls.getItem(key);
+
+      if (rawItem) {
+        var parsedItem = JSON.parse(rawItem);
+
+        if (LSItemWrapper.isLSItemWrapper(parsedItem)) {
+          var parsedLSItem = new LSItemWrapper(parsedItem.value, parsedItem.expiresOn);
+          if (parsedLSItem.isValid()) {
+            return parsedItem.value;
+          } else {
+            service.removeItem(key);
+          }
         } else {
-          service.removeItem(key);
+          return parsedItem;
         }
-      } else {
-        return parsedItem;
+      }
+
+      return null;
+    }
+
+    LSItemWrapper.isLSItemWrapper = isLSItemWrapper;
+    function LSItemWrapper(value, expiresOn) {
+      var me = this;
+
+      handleExpiresOn();
+
+      me.value = value;
+      me.$$lsi = true;
+      me.toStorageObject = toStorageObject;
+      me.isValid = isValid;
+
+      function toStorageObject() {
+        return JSON.stringify(me);
+      }
+
+      function handleExpiresOn() {
+        // Return a null object if it's already past expiration
+        if (expiresOn instanceof Date) {
+          me.expiresOn = expiresOn.toISOString();
+        }
+      }
+
+      function isValid() {
+        var parsedExpiresOn = Date.parse(me.expiresOn);
+
+        if (parsedExpiresOn) {
+          return parsedExpiresOn >= new Date();
+        }
+
+        return true;
       }
     }
 
-    return null;
-  }
-
-  LSItemWrapper.isLSItemWrapper = isLSItemWrapper;
-  function LSItemWrapper(value, expiresOn) {
-    var me = this;
-
-    handleExpiresOn();
-
-    me.value = value;
-    me.$$lsi = true;
-    me.toStorageObject = toStorageObject;
-    me.isValid = isValid;
-
-    function toStorageObject() {
-      return JSON.stringify(me);
+    function isLSItemWrapper(obj) {
+      return obj.$$lsi;
     }
 
-    function handleExpiresOn() {
-      // Return a null object if it's already past expiration
-      if (expiresOn instanceof Date) {
-        me.expiresOn = expiresOn.toISOString();
-      }
-    }
 
-    function isValid() {
-      var parsedExpiresOn = Date.parse(me.expiresOn);
-
-      if (parsedExpiresOn) {
-        return parsedExpiresOn >= new Date();
-      }
-
-      return true;
-    }
-  }
-
-  function isLSItemWrapper(obj) {
-    return obj.$$lsi;
-  }
-
-
-  return service;
-}]);
+    return service;
+  }]);

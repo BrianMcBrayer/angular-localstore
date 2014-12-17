@@ -15,9 +15,7 @@
  */
 
 angular.module('heroicVentures.localStore', [])
-.provider('$localStore',
-        [
-function () {
+.provider('$localStore', [function () {
     'use strict';
     var me = this;
 
@@ -27,8 +25,7 @@ function () {
     // Members
     //////////
 
-    var storageServicePriority = [],
-        useStorageService;
+    var storageServicePriority = [];
 
     function setStorageServicesByPriority () {
       storageServicePriority = [];
@@ -46,12 +43,19 @@ function () {
       return storageServicePriority;
     }
 
-    me.$get = [function() {
+    me.$get = ['$injector', function($injector) {
+
+      var useStorageService = null;
 
       var service = {
         hasAvailableService: hasAvailableService,
         availableService: availableService
       };
+
+      function init() {
+        findHighestUsefulStorageService(
+          populatePotentialStorageServices(storageServicePriority));
+      }
 
       function hasAvailableService() {
         try {
@@ -62,18 +66,35 @@ function () {
       }
 
       function availableService() {
-        if (useStorageService === null || findHighestUsefulStorageService()) {
+        if (useStorageService === null) {
           throw new Error('No available storage service exists');
         }
 
         return useStorageService;
       }
 
-      function findHighestUsefulStorageService() {
+      function populatePotentialStorageServices() {
+        var potentialStorageServices = [];
+
+        for (var curStorageServiceIndex = 0, len = storageServicePriority.length;
+          curStorageServiceIndex < len; curStorageServiceIndex++) {
+            var curStorageServiceName = storageServicePriority[curStorageServiceIndex];
+
+            if ($injector.has(curStorageServiceName)) {
+              potentialStorageServices.push(
+                $injector.get(curStorageServiceName));
+            }
+          }
+
+          return populatePotentialStorageServices;
+      }
+
+      function findHighestUsefulStorageService(services) {
         useStorageService = null;
 
-        for (var curArgIndex = 0, len = storageServicePriority.length; curArgIndex < len; i++) {
-          var curService = storageServicePriority[curArgIndex];
+        for (var curArgIndex = 0, len = services.length;
+          curArgIndex < len; curArgIndex++) {
+          var curService = services[curArgIndex];
 
           if (curService && typeof(curService.canUse) === 'function' && curService.canUse()) {
             useStorageService = curService;
