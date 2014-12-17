@@ -19,14 +19,14 @@ angular.module('app', ['heroicVentures.localStore'])
       }
 
       function add() {
-        $localStorage.setItem(vm.storeKey, vm.storeValue);
+        ls.setItem(vm.storeKey, vm.storeValue);
       }
 
       function clearAllStorage() {
-        $localStorage.clear();
+        ls.clear();
       }
 
       function retrieve() {
-        vm.retrievedItem = $localStorage.getItem(vm.retrieveKey);
+        vm.retrievedItem = ls.getItem(vm.retrieveKey);
       }
     }]);
