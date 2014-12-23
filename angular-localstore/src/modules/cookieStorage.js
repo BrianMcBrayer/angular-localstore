@@ -1,5 +1,7 @@
 angular.module('heroicVentures.localStore.cookieStorage', ['ngCookies'])
-.factory('hVCookieStorage', ['$cookieStore', function ($cookieStore) {
+.factory('hVCookieStorage',
+        ['$cookies', '$cookieStore',
+function ($cookies, $cookieStore) {
   'use strict';
 
   var service = {
