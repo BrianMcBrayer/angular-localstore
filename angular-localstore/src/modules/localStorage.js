@@ -1,4 +1,11 @@
-angular.module('heroicVentures.localStore.localStorage', [])
+(function(angular) {
+'use strict';
+
+if (angular == null) {
+  throw new Error('Must load angular to use hVLocalStorage');
+}
+
+angular.module('hv.localStore.localStorage', [])
 .factory('hVLocalStorage', ['$window', function($window) {
 
   var ls;
@@ -83,3 +90,5 @@ angular.module('heroicVentures.localStore.localStorage', [])
 
     return service;
   }]);
+
+})(angular || null);

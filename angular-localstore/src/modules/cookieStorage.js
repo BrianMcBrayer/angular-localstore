@@ -1,11 +1,23 @@
-angular.module('heroicVentures.localStore.cookieStorage', ['ngCookies'])
+// Enumerate the list of 'objects' to an array
+// That way we can treat the cookies like localStorage objects
+// So $cookies.people becomes cookieStorage[0] = people
+// This should be read in on init and kept in sync somehow
+
+(function(angular) {
+'use strict';
+
+if (angular == null) {
+  throw new Error('Must load angular to use hVCookieStorage');
+}
+
+angular.module('hv.localStore.cookieStorage', ['ngCookies'])
 .factory('hVCookieStorage',
         ['$cookies', '$cookieStore',
 function ($cookies, $cookieStore) {
-  'use strict';
 
   var CONSTANTS = Object.freeze({
-    KEY_PREFIX: 'hv.'
+    KEY_PREFIX: 'hv.',
+    KEY_PREFIX_LENGTH = 3
   });
 
   var service = {
@@ -26,7 +38,8 @@ function ($cookies, $cookieStore) {
     var hasNative,
       FAKE_ITEM_KEY = CONSTANTS.KEY_PREFIX +
         'fakeKey.asdfghjlkasdfghjlasdfghjkasdfghjklasdfghjklweqryuiozxcvnm',
-      FAKE_ITEM_VALUE = 'hv.fakeValue';
+      FAKE_ITEM_VALUE = CONSTANTS.KEY_PREFIX +
+        'fakeValue';
 
     try {
       $cookieStore.put(FAKE_ITEM_KEY, FAKE_ITEM_VALUE);
@@ -46,9 +59,12 @@ function ($cookies, $cookieStore) {
     var cookieLength = 0;
 
     for (var nextCookie in $cookies) {
-      if (nextCookie.hasOwnProperty(nextCookie)) {
-        cookieLength++;
-      }
+      if ((nextCookie.hasOwnProperty(nextCookie)) &&
+          (nextCookie.subStr(0, CONSTANTS.KEY_PREFIX_LENGTH) ===
+            CONSTANTS.KEY_PREFIX)) {
+              cookieLength++;
+            }
+
     }
 
     return cookieLength;
@@ -78,3 +94,4 @@ function ($cookies, $cookieStore) {
 
   return service;
 }]);
+})(angular || null);
