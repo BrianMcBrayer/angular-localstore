@@ -1,8 +1,3 @@
-// Enumerate the list of 'objects' to an array
-// That way we can treat the cookies like localStorage objects
-// So $cookies.people becomes cookieStorage[0] = people
-// This should be read in on init and kept in sync somehow
-
 (function(angular) {
 'use strict';
 
@@ -20,19 +15,34 @@ function ($cookies, $cookieStore) {
     KEY_PREFIX_LENGTH = 3
   });
 
-  var service = {
-        setItem: setItem,
-        getItem: getItem,
-        clear: clear,
-        removeItem: removeItem,
-        key: key,
-        length: length,
-        canUse: browserHasNative
-      };
+  var cookieArray = [],
+      service = {
+          setItem: setItem,
+          getItem: getItem,
+          clear: clear,
+          removeItem: removeItem,
+          key: key,
+          length: length,
+          canUse: browserHasNative
+        };
 
   ////////////
   // Functions
   ////////////
+
+  init();
+
+  function init() {
+    cookieArray = [];
+
+    for (var nextCookie in $cookies) {
+      if ((nextCookie.hasOwnProperty(nextCookie)) &&
+        (nextCookie.subStr(0, CONSTANTS.KEY_PREFIX_LENGTH) ===
+        CONSTANTS.KEY_PREFIX)) {
+          cookieArray.push(nextCookie);
+        }
+      }
+  }
 
   function browserHasNative() {
     var hasNative,
@@ -56,40 +66,39 @@ function ($cookies, $cookieStore) {
   }
 
   function length() {
-    var cookieLength = 0;
-
-    for (var nextCookie in $cookies) {
-      if ((nextCookie.hasOwnProperty(nextCookie)) &&
-          (nextCookie.subStr(0, CONSTANTS.KEY_PREFIX_LENGTH) ===
-            CONSTANTS.KEY_PREFIX)) {
-              cookieLength++;
-            }
-
-    }
-
-    return cookieLength;
+    return cookieArray.length;
   }
 
   function key(index) {
-    return ls.key(index);
+    return cookieArray[index];
   }
 
   function removeItem(key) {
-    return ls.removeItem(key);
+    var itemLocation = cookieArray.indexOf(key);
+
+    if (itemLocation > -1) {
+      cookieArray.splice(itemLocation, 1);
+      delete $cookies[key];
+    }
   }
 
   function clear() {
-    ls.clear();
+    cookieArray.forEach(function(curVal) {
+      delete $cookies[curVal];
+    });
+
+    cookieArray = [];
   }
 
   function setItem(key, value) {
     if (value != null && key != null && typeof(key) === 'string') {
-      ls.setItem(key, JSON.stringify(value));
+      $cookieStore.put(key, value);
+      cookieArray.push(key);
     }
   }
 
   function getItem(key) {
-    return ls.getItem(key);
+    return $cookieStore.get(key);
   }
 
   return service;
