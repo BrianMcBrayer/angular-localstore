@@ -1,4 +1,4 @@
-angular.module('heroicVentures.localStore')
+angular.module('heroicVentures.localStore.localStorage', [])
 .factory('hVLocalStorage', ['$window', function($window) {
 
   var ls;
@@ -73,7 +73,7 @@ angular.module('heroicVentures.localStore')
 
     function setItem(key, value) {
       if (value != null && key != null && typeof(key) === 'string') {
-        ls.setItem(key, JSON.stringify(value));
+        ls.setItem(key, angular.toJson(value));
       }
     }
 
