@@ -13,10 +13,15 @@
  * -[] Change to provider, pass in objects in order of desired use
  * -[] Fallback to each service if it cannot be used
  */
+(function(angular) {
+'use strict';
 
-angular.module('heroicVentures.localStore', [])
+if (angular == null) {
+  throw new Error('Must load angular to use hv.localStore');
+}
+
+angular.module('hv.localStore', [])
 .provider('$localStore', [function () {
-    'use strict';
     var me = this;
 
     me.setStorageServicesByPriority = setStorageServicesByPriority;
@@ -110,3 +115,4 @@ angular.module('heroicVentures.localStore', [])
       return service;
     }];
 }]);
+})(angular || null);

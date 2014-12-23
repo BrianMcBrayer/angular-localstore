@@ -1,4 +1,9 @@
-angular.module('app', ['heroicVentures.localStore'])
+angular.module('app',
+[
+'hv.localStore',
+'hv.localStore.cookieStorage',
+'hv.localStore.localStorage'
+])
   .controller('MasterController', [
             '$localStore',
     function($localStore) {

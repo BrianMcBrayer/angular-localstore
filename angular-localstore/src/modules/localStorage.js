@@ -1,4 +1,11 @@
-angular.module('heroicVentures.localStore')
+(function(angular) {
+'use strict';
+
+if (angular == null) {
+  throw new Error('Must load angular to use hVLocalStorage');
+}
+
+angular.module('hv.localStore.localStorage', [])
 .factory('hVLocalStorage', ['$window', function($window) {
 
   var ls;
@@ -21,8 +28,6 @@ angular.module('heroicVentures.localStore')
     ////////////
     // Functions
     ////////////
-
-    init();
 
     function init() {
       if (browserHasNative()) {
@@ -73,77 +78,17 @@ angular.module('heroicVentures.localStore')
       ls.clear();
     }
 
-    function setItem(key, value, expiresOn) {
-      var expiryDate = (expiresOn != null ? new Date(expiresOn) : null);
-      var wrappedItem = new LSItemWrapper(value, expiryDate);
-
-      if (wrappedItem.isValid()) {
-        ls.setItem(key, wrappedItem.toStorageObject());
-
-        return value;
+    function setItem(key, value) {
+      if (value != null && key != null && typeof(key) === 'string') {
+        ls.setItem(key, angular.toJson(value));
       }
-
-      return null;
     }
 
     function getItem(key) {
-      var rawItem = ls.getItem(key);
-
-      if (rawItem) {
-        var parsedItem = JSON.parse(rawItem);
-
-        if (LSItemWrapper.isLSItemWrapper(parsedItem)) {
-          var parsedLSItem = new LSItemWrapper(parsedItem.value, parsedItem.expiresOn);
-          if (parsedLSItem.isValid()) {
-            return parsedItem.value;
-          } else {
-            service.removeItem(key);
-          }
-        } else {
-          return parsedItem;
-        }
-      }
-
-      return null;
+      return ls.getItem(key);
     }
-
-    LSItemWrapper.isLSItemWrapper = isLSItemWrapper;
-    function LSItemWrapper(value, expiresOn) {
-      var me = this;
-
-      handleExpiresOn();
-
-      me.value = value;
-      me.$$lsi = true;
-      me.toStorageObject = toStorageObject;
-      me.isValid = isValid;
-
-      function toStorageObject() {
-        return JSON.stringify(me);
-      }
-
-      function handleExpiresOn() {
-        // Return a null object if it's already past expiration
-        if (expiresOn instanceof Date) {
-          me.expiresOn = expiresOn.toISOString();
-        }
-      }
-
-      function isValid() {
-        var parsedExpiresOn = Date.parse(me.expiresOn);
-
-        if (parsedExpiresOn) {
-          return parsedExpiresOn >= new Date();
-        }
-
-        return true;
-      }
-    }
-
-    function isLSItemWrapper(obj) {
-      return obj.$$lsi;
-    }
-
 
     return service;
   }]);
+
+})(angular || null);
