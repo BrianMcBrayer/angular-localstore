@@ -4,6 +4,10 @@ angular.module('heroicVentures.localStore.cookieStorage', ['ngCookies'])
 function ($cookies, $cookieStore) {
   'use strict';
 
+  var CONSTANTS = Object.freeze({
+    KEY_PREFIX: 'hv.'
+  });
+
   var service = {
         setItem: setItem,
         getItem: getItem,
@@ -20,7 +24,8 @@ function ($cookies, $cookieStore) {
 
   function browserHasNative() {
     var hasNative,
-      FAKE_ITEM_KEY = 'hv.fakeKey.asdfghjlkasdfghjlasdfghjkasdfghjklasdfghjklweqryuiozxcvnm',
+      FAKE_ITEM_KEY = CONSTANTS.KEY_PREFIX +
+        'fakeKey.asdfghjlkasdfghjlasdfghjkasdfghjklasdfghjklweqryuiozxcvnm',
       FAKE_ITEM_VALUE = 'hv.fakeValue';
 
     try {
@@ -38,7 +43,15 @@ function ($cookies, $cookieStore) {
   }
 
   function length() {
-    return ls.length;
+    var cookieLength = 0;
+
+    for (var nextCookie in $cookies) {
+      if (nextCookie.hasOwnProperty(nextCookie)) {
+        cookieLength++;
+      }
+    }
+
+    return cookieLength;
   }
 
   function key(index) {
