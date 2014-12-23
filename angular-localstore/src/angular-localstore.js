@@ -74,12 +74,12 @@ angular.module('hv.localStore', [])
         return useStorageService;
       }
 
-      function populatePotentialStorageServices() {
+      function populatePotentialStorageServices(requestedStorageServices) {
         var potentialStorageServices = [];
 
-        for (var curStorageServiceIndex = 0, len = storageServicePriority.length;
+        for (var curStorageServiceIndex = 0, len = requestedStorageServices.length;
           curStorageServiceIndex < len; curStorageServiceIndex++) {
-            var curStorageServiceName = storageServicePriority[curStorageServiceIndex];
+            var curStorageServiceName = requestedStorageServices[curStorageServiceIndex];
 
             if ($injector.has(curStorageServiceName)) {
               potentialStorageServices.push(
@@ -87,7 +87,7 @@ angular.module('hv.localStore', [])
             }
           }
 
-          return populatePotentialStorageServices;
+          return potentialStorageServices;
       }
 
       function findHighestUsefulStorageService(services) {
