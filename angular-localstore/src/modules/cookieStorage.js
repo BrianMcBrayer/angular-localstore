@@ -33,15 +33,17 @@ function ($cookies, $cookieStore) {
   init();
 
   function init() {
-    cookieArray = [];
+    if(browserHasNative()) {
+      cookieArray = [];
 
-    for (var nextCookie in $cookies) {
-      if ((nextCookie.hasOwnProperty(nextCookie)) &&
-        (nextCookie.subStr(0, CONSTANTS.KEY_PREFIX_LENGTH) ===
-        CONSTANTS.KEY_PREFIX)) {
-          cookieArray.push(nextCookie);
-        }
-      }
+      for (var nextCookie in $cookies) {
+        if ((nextCookie.hasOwnProperty(nextCookie)) &&
+          (nextCookie.subStr(0, CONSTANTS.KEY_PREFIX_LENGTH) ===
+          CONSTANTS.KEY_PREFIX)) {
+            cookieArray.push(nextCookie);
+          }
+        }  
+    }
   }
 
   function browserHasNative() {
