@@ -33,7 +33,7 @@ angular.module('hv.localStore', [])
           storageServicePriority = arguments[0];
         } else {
           // Convert the passed arguments to an array
-          for (var curArgIndex = 0, len = arguments.length; curArgIndex < len; i++) {
+          for (var curArgIndex = 0, len = arguments.length; curArgIndex < len; curArgIndex++) {
             storageServicePriority.push(arguments[curArgIndex]);
           }
         }
