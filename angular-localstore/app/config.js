@@ -1,5 +1,5 @@
 angular.module('app')
-  .config(['$localStoreProvder',
+  .config(['$localStoreProvider',
   function($localStoreProvider) {
     $localStoreProvider.setStorageServicesByPriority('hVLocalStorage');
   }]);
