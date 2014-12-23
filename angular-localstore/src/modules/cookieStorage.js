@@ -12,7 +12,7 @@ function ($cookies, $cookieStore) {
 
   var CONSTANTS = Object.freeze({
     KEY_PREFIX: 'hv.',
-    KEY_PREFIX_LENGTH = 3
+    KEY_PREFIX_LENGTH: 3
   });
 
   var cookieArray = [],
