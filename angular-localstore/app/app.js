@@ -1,15 +1,11 @@
 angular.module('app',
-[
-'hv.localStore',
-'hv.localStore.cookieStorage',
-'hv.localStore.localStorage'
-])
-  .controller('MasterController', [
-            '$localStore',
-    function($localStore) {
-      var vm = this;
-
-      var ls;
+  [
+    'hv.localStore',
+    'hv.localStore.cookieStorage',
+    'hv.localStore.localStorage'
+  ]).controller('MasterController', ['$localStore', function($localStore) {
+      var vm = this,
+          ls;
 
       vm.store = add;
       vm.clearAllStorage = clearAllStorage;
