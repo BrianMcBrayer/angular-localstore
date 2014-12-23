@@ -28,12 +28,14 @@ angular.module('hv.localStore', [])
       storageServicePriority = [];
 
       // Is the first argument an array?
-      if (arguments.length > 0 && Array.isArray(arguments[0])) {
-        storageServicePriority = arguments[0];
-      } else if (arguments.length > 1) {
-        // Convert the passed arguments to an array
-        for (var curArgIndex = 0, len = arguments.length; curArgIndex < len; i++) {
-          storageServicePriority.push(arguments[curArgIndex]);
+      if (arguments.length > 0) {
+        if (Array.isArray(arguments[0])) {
+          storageServicePriority = arguments[0];
+        } else {
+          // Convert the passed arguments to an array
+          for (var curArgIndex = 0, len = arguments.length; curArgIndex < len; i++) {
+            storageServicePriority.push(arguments[curArgIndex]);
+          }
         }
       }
 
